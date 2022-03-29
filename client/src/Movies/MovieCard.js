@@ -5,19 +5,19 @@ import { MOVIES_BY_ID_URL } from './constants';
 
 
 export default function MovieCard (props) {
+
   /* store retrieved actors from external API CALL */
   const [movieInfo, setMovieInfo] = useState(null)
   // const {url} = useRouteMatch()
   const {movieId} = useParams() // get the exact same param from the routing : path='/movie/:movieId' 
   
-
-  
-  useEffect(() => {
+  useEffect(() => {    
     const getActors = () => {
       axios
         .get(`${MOVIES_BY_ID_URL}/${movieId}`) 
         .then(response => {
           setMovieInfo(response.data)
+          props.titlePage(`Movie:${response.data.title}`) 
         })
         .catch(error => {
           console.error('Server Error', error);
@@ -25,11 +25,11 @@ export default function MovieCard (props) {
     }
     getActors();
   }, []);
-
-  /* avoid rendering before loading info */
-  if (!movieInfo) return "Hold yer horses, be back in a sec!";
-
-  props.titlePage(`Movie:${movieInfo.title}`)
+  
+    /* avoid rendering before loading info */
+  if (!movieInfo) {
+    return "loading..."
+  }
   
   return (
     <div className="movie-card">
@@ -43,12 +43,12 @@ export default function MovieCard (props) {
       <h2>Actors</h2>
 
       <div className="movie-metascore">
-        { movieInfo.stars.map(star => (
-              <Actors info={star} key={movieInfo.id} />
+        { movieInfo.stars.map((star, idx) => (
+              <Actors info={star} key={idx} />
             ))}
       </div>
 
-
+      
     </div>
   );
 }

@@ -10,7 +10,7 @@ import {useDocTitle} from "./Movies/titleHook"
 
 export default function App () {
   const [saved, setSaved] = useState([]); // Stretch: the ids of "saved" movies
-  const [movieList, setMovieList] = useState([]);
+  const [movieList, setMovieList] = useState(null);
   const [doctitle, setDocTitle] = useDocTitle('');
 
 
@@ -32,39 +32,26 @@ export default function App () {
   }, []);
 
 
-  const addToSavedList = id => {
-    // This is stretch. Prevent the same movie from being "saved" more than once
-  };
+    /* avoid rendering before loading info */
+    if (!movieList) return "loading...";
+
+    const addToSavedList = id => {
+      // This is stretch. Prevent the same movie from being "saved" more than once
+    };
 
   return (
     <div>
       <SavedList list={[ /* This is stretch */]} />
       <Switch>
-
-
         <Route path='/movies/:movieId'>
           <MovieCard titlePage={setDocTitle}  />
         </Route>
 
-        <Route path='/movies' >
-          <MovieList movies={movieList} titlePage={setDocTitle} ></MovieList>
-        </Route>
-
         <Route path='/'>
-          <HomeRedirect  />
-        </Route>
-
+          <MovieList movies={movieList} titlePage={setDocTitle} ></MovieList>
+        </Route>       
       </Switch>
     </div>
   );
 
 }
-
-function HomeRedirect(params) {
-
-
-  return (
-    <div className="movie-card">
-      <p><Link to='/movies'>Show Movies</Link></p>
-    </div>
- )}
